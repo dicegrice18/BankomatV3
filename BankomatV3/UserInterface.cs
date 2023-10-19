@@ -112,13 +112,19 @@ namespace BankomatV3
                 string password = Console.ReadLine();
                 Console.WriteLine();
 
-                var utente = ctx.Utenti.FirstOrDefault(u => u.NomeUtente == nomeUtente && u.Password == password && u.IdBanca == _bancaCorrente.Id);
+                var utente = ctx.Utenti.FirstOrDefault(u => u.NomeUtente == nomeUtente);
 
-                if (utente != null)
+                if (utente == null)
                 {
-                    autenticato = true;
+                    Console.WriteLine("hai sbagliato credenziali!");
+                    return autenticato;
                 }
-                else
+                else if (utente.IdBanca != _bancaCorrente.Id)
+                {
+                    Console.WriteLine("hai sbagliato banca!");
+                    return autenticato;
+                }
+                else if(utente.Password != password)
                 {
                     tentativiRimanenti--;
 
@@ -131,7 +137,12 @@ namespace BankomatV3
                     else
                     {
                         Console.WriteLine("Accesso non riuscito. Account bloccato.");
+                        utente.Bloccato = true;
                     }
+                }
+                else
+                {
+                    autenticato = true;
                 }
             }
             while (!autenticato && tentativiRimanenti > 0);
