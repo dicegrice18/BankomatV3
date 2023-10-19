@@ -138,6 +138,7 @@ namespace BankomatV3
                     {
                         Console.WriteLine("Accesso non riuscito. Account bloccato.");
                         utente.Bloccato = true;
+                        ctx.SaveChanges();
                     }
                 }
                 else
