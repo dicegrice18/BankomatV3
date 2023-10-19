@@ -119,6 +119,11 @@ namespace BankomatV3
                     Console.WriteLine("hai sbagliato credenziali!");
                     return autenticato;
                 }
+                else if(utente.Bloccato == true)
+                {
+                    Console.WriteLine("utente bloccato!");
+                    return autenticato;
+                }
                 else if (utente.IdBanca != _bancaCorrente.Id)
                 {
                     Console.WriteLine("hai sbagliato banca!");
