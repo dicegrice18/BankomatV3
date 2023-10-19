@@ -99,48 +99,45 @@ namespace BankomatV3
 
         private bool Login()
         {
-            bool autenticato = false;
             int tentativiRimanenti = 3;
-
-            StampaIntestazione($"Login - {_bancaCorrente.Nome}");
+            bool autenticato = false;
+            Console.Clear();
 
             do
             {
+                StampaIntestazione($"Login - {_bancaCorrente.Nome}");
                 Console.Write("Nome utente: ");
                 string nomeUtente = Console.ReadLine();
                 Console.Write("Password: ");
                 string password = Console.ReadLine();
+                Console.WriteLine();
+
                 var utente = ctx.Utenti.FirstOrDefault(u => u.NomeUtente == nomeUtente && u.Password == password && u.IdBanca == _bancaCorrente.Id);
 
-                if (utente == null)
+                if (utente != null)
+                {
+                    autenticato = true;
+                }
+                else
                 {
                     tentativiRimanenti--;
 
                     if (tentativiRimanenti > 0)
                     {
                         Console.WriteLine($"Accesso non riuscito. Tentativi rimanenti: {tentativiRimanenti}");
-                        Console.Write("Premere un tasto per proseguire\n");
+                        Console.Write("Premere un tasto per proseguire");
                         Console.ReadKey();
                     }
                     else
                     {
-                        utente.Bloccato = true;
-                        ctx.SaveChanges();
                         Console.WriteLine("Accesso non riuscito. Account bloccato.");
                     }
-                }
-                else if (utente.IdBanca != _bancaCorrente.Id)
-                {
-                    Console.WriteLine("Accesso non riuscito. L'utente non appartiene a questa banca.");
-                }
-                else
-                {
-                    autenticato = true; // Imposta autenticato su true se le credenziali sono corrette
                 }
             }
             while (!autenticato && tentativiRimanenti > 0);
 
             return autenticato;
+
         }
 
 
